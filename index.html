@@ -39,27 +39,37 @@ border-radius:10px;
 <button onclick="calculate()">Посчитать</button>
 <div id="result"></div>
 <script>
-function getValue(text,name){
-let lines = text.split('\n');
+function getValue(text, name){
+
+let lines = text.split("\n");
+
 for(let line of lines){
+
 if(line.toLowerCase().includes(name.toLowerCase())){
-let total = 0;
-// первое число после "-"
-let first = line.match(/[-–]\s*(\d+)/);
-if(first){
-total += parseInt(first[1]);
-}
-// все +10, -2 и т.д.
+
+let base = 0;
+
+// базовое число
+let baseMatch = line.match(/[-–]\s*(\d+)/);
+if(baseMatch) base = parseInt(baseMatch[1]);
+
+// все + и -
 let ops = line.match(/[+-]\d+/g);
+
 if(ops){
-for(let op of ops){
-total += parseInt(op);
+ops.forEach(op=>{
+base += parseInt(op);
+});
 }
+
+return base;
+
 }
-return total;
+
 }
-}
+
 return 0;
+
 }
 function calculate(){
 let text = document.getElementById("input").value;
