@@ -40,21 +40,26 @@ border-radius:10px;
 <div id="result"></div>
 <script>
 function getValue(text,name){
-let line = text.split("\n").find(l =>
-l.toLowerCase().includes(name.toLowerCase())
-);
-if(!line) return 0;
-// основное число после названия
-let mainMatch = line.match(/[-–]\s*(\d+)/);
-let total = mainMatch ? parseInt(mainMatch[1]) : 0;
-// все приходы и списания
-let changes = line.match(/[+-]\d+/g);
-if(changes){
-changes.forEach(c=>{
-total += parseInt(c);
-});
+let lines = text.split('\n');
+for(let line of lines){
+if(line.toLowerCase().includes(name.toLowerCase())){
+let total = 0;
+// первое число после "-"
+let first = line.match(/[-–]\s*(\d+)/);
+if(first){
+total += parseInt(first[1]);
+}
+// все +10, -2 и т.д.
+let ops = line.match(/[+-]\d+/g);
+if(ops){
+for(let op of ops){
+total += parseInt(op);
+}
 }
 return total;
+}
+}
+return 0;
 }
 function calculate(){
 let text = document.getElementById("input").value;
