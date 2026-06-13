@@ -40,9 +40,21 @@ border-radius:10px;
 <div id="result"></div>
 <script>
 function getValue(text,name){
-let regex = new RegExp(name + "\\s*[-–]\\s*(\\d+)","i");
-let match = text.match(regex);
-return match ? parseInt(match[1]) : 0;
+let line = text.split("\n").find(l =>
+l.toLowerCase().includes(name.toLowerCase())
+);
+if(!line) return 0;
+// основное число после названия
+let mainMatch = line.match(/[-–]\s*(\d+)/);
+let total = mainMatch ? parseInt(mainMatch[1]) : 0;
+// все приходы и списания
+let changes = line.match(/[+-]\d+/g);
+if(changes){
+changes.forEach(c=>{
+total += parseInt(c);
+});
+}
+return total;
 }
 function calculate(){
 let text = document.getElementById("input").value;
